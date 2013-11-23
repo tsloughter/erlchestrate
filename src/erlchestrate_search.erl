@@ -5,7 +5,7 @@
 get_(Required, Optional, Body) ->
     {ok, Token} = application:get_env(ramler, token),
     ramler_utils:request(get,
-                         <<"https://api.orchestrate.io/v0">>, <<"/{collection}">>,
+                         <<"/{collection}">>,
                          Required, Optional,
                          [{offset, [{type, integer}]},
                           {limit, [{type, integer}]},

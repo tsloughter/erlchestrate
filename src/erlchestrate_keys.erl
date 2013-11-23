@@ -5,7 +5,6 @@
 put_(Required, Optional, Body) ->
     {ok, Token} = application:get_env(erlchestrate, token),
     erlchestrate_utils:request(put,
-                               <<"https://api.orchestrate.io/v0">>,
                                <<"/{collection}/{key}">>,
                                Required, Optional, [],
                                [{<<"Authorization">>, Token},
@@ -24,7 +23,6 @@ put(Collection, Key, Optional, Body) ->
 get_(Required, Optional, Body) ->
     {ok, Token} = application:get_env(erlchestrate, token),
     erlchestrate_utils:request(get,
-                               <<"https://api.orchestrate.io/v0">>,
                                <<"/{collection}/{key}">>,
                                Required, Optional, [],
                                [{<<"Authorization">>, Token},

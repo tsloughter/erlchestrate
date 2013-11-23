@@ -5,7 +5,6 @@
 put_(Required, Optional, Body) ->
     {ok, Token} = application:get_env(erlchestrate, token),
     erlchestrate_utils:request(put,
-                               <<"https://api.orchestrate.io/v0">>,
                                <<"/relations/{kind}/relation/{to_collection}/{to_key}">>,
                                Required, Optional, [],
                                [{<<"Authorization">>, Token},
@@ -13,22 +12,21 @@ put_(Required, Optional, Body) ->
                                  <<"application/json; charset=utf-8">>}],
                                Body).
 
-put(Collection, Key, Kind, To_collection, To_key) ->
+put(Collection, Key, Kind, ToCollection, ToKey) ->
     put_([{<<"collection">>, Collection},
-          {<<"to_collection">>, To_collection}, {<<"key">>, Key},
-          {<<"to_key">>, To_key}, {<<"kind">>, Kind}],
+          {<<"to_collection">>, ToCollection}, {<<"key">>, Key},
+          {<<"to_key">>, ToKey}, {<<"kind">>, Kind}],
          [], []).
 
-put(Collection, Key, Kind, To_collection, To_key, Optional) ->
+put(Collection, Key, Kind, ToCollection, ToKey, Optional) ->
     put_([{<<"collection">>, Collection},
-          {<<"to_collection">>, To_collection}, {<<"key">>, Key},
-          {<<"to_key">>, To_key}, {<<"kind">>, Kind}],
+          {<<"to_collection">>, ToCollection}, {<<"key">>, Key},
+          {<<"to_key">>, ToKey}, {<<"kind">>, Kind}],
          Optional, []).
 
 get_(Required, Optional, Body) ->
     {ok, Token} = application:get_env(erlchestrate, token),
     erlchestrate_utils:request(get,
-                               <<"https://api.orchestrate.io/v0">>,
                                <<"/{collection}/{key}/relations/{kind}">>,
                                Required,
                                Optional, [],

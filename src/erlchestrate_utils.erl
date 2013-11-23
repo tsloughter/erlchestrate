@@ -1,17 +1,18 @@
 -module(erlchestrate_utils).
 
--export([request/7
-        ,request/8]).
+-export([request/6
+        ,request/7]).
 
-request(HttpMethod, Host, Endpoint, Required, Optional, QueryParams, Headers) ->
-    request(HttpMethod, Host, Endpoint, Required, Optional, QueryParams, Headers, []).
-request(HttpMethod, Host, Endpoint, Required, Optional, QueryParams, Headers, Body) ->
+request(HttpMethod, Endpoint, Required, Optional, QueryParams, Headers) ->
+    request(HttpMethod, Endpoint, Required, Optional, QueryParams, Headers, []).
+request(HttpMethod, Endpoint, Required, Optional, QueryParams, Headers, Body) ->
+    BaseUri = <<"https://api.orchestrate.io/v0">>,
     Path = lists:foldl(fun({K, V}, Acc) ->
                                binary:replace(Acc, <<"{", K/binary, "}">>, V)
                        end, Endpoint, Required),
     OptionalParams = build_qs(Optional, QueryParams),
     do(HttpMethod,
-       Host,
+       BaseUri,
        <<Path/binary, "?" , OptionalParams/binary>>, Headers, Body).
 
 do(Method, Url, Path, Headers, Body) ->

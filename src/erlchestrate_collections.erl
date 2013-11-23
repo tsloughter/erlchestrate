@@ -5,7 +5,6 @@
 delete_(Required, Optional, Body) ->
     {ok, Token} = application:get_env(erlchestrate, token),
     erlchestrate_utils:request(delete,
-                               <<"https://api.orchestrate.io/v0">>,
                                <<"/{collection}">>,
                                Required, Optional, [{force, [{type, string}]}],
                                [{<<"Authorization">>, Token},
