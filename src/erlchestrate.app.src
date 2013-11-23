@@ -1,0 +1,17 @@
+%% -*- erlang -*-
+{application, erlchestrate,
+ [{description, "Erlang Orchestrate.io Client"},
+  {vsn, "0.1.0"},
+  {registered, [erlchestrate_sup]},
+  {mod, {erlchestrate_app, []}},
+  {start_phases, []},
+  {applications, [
+                 kernel
+                 ,stdlib
+                 ,sasl
+                 ,lager
+                 ,jsx
+                 ,hackney
+                 ]},
+  {env, []}
+ ]}.

@@ -1,0 +1,100 @@
+title: Orchestrate.io API
+version: v0
+baseUri: https://api.orchestrate.io/v0
+securitySchemes:
+    - basic:
+        type: Basic
+        describedBy:
+            headers:
+                Authorization:
+                    type: string
+:collections:
+  /{collection}:
+    delete:
+      uriParameters:
+        collection:
+          type: string
+      queryParameters:
+        force:
+          type: string
+:keys:
+  /{collection}/{key}:
+    get:
+      uriParameters:
+        collection:
+          type: string
+        key:
+          type: string
+    put:
+      body:
+        application/json:
+      uriParameters:
+        collection:
+          type: string
+        key:
+          type: string
+:events:
+  /{collection}/{key}/events/{type}:
+    get:
+      uriParameters:
+        collection:
+          type: string
+        key:
+          type: string
+        type:
+          type: string
+      queryParameters:
+        start:
+            type: string
+        end:
+            type: string
+    put:
+      body:
+        application/json:
+      uriParameters:
+        collection:
+          type: string
+        key:
+          type: string
+        type:
+          type: string
+      queryParameters:
+        timestamp:
+            type: string
+:graph:
+  /{collection}/{key}:
+    /relations/{kind}:
+      get:
+        uriParameters:
+          collection:
+            type: string
+          key:
+            type: string
+          kind:
+            type: string
+    /relation/{to_collection}/{to_key}:
+      put:
+        uriParameters:
+          collection:
+            type: string
+          key:
+            type: string
+          kind:
+            type: string
+          to_collection:
+            type: string
+          to_key:
+            type: string
+:search:
+  /{collection}:
+    get:
+      uriParameters:
+          collection:
+            type: string
+      queryParameters:
+        query:
+            type: string
+        limit:
+            type: integer
+        offset:
+            type: integer
