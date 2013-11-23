@@ -13,14 +13,13 @@ put_(Required, Optional, Body) ->
                                  <<"application/json; charset=utf-8">>}],
                                Body).
 
-put(Collection, To_collection, Key, To_key, Kind) ->
+put(Collection, Key, Kind, To_collection, To_key) ->
     put_([{<<"collection">>, Collection},
           {<<"to_collection">>, To_collection}, {<<"key">>, Key},
           {<<"to_key">>, To_key}, {<<"kind">>, Kind}],
          [], []).
 
-put(Collection, To_collection, Key, To_key, Kind,
-    Optional) ->
+put(Collection, Key, Kind, To_collection, To_key, Optional) ->
     put_([{<<"collection">>, Collection},
           {<<"to_collection">>, To_collection}, {<<"key">>, Key},
           {<<"to_key">>, To_key}, {<<"kind">>, Kind}],
