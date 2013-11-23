@@ -16,13 +16,17 @@ request(HttpMethod, Endpoint, Required, Optional, QueryParams, Headers, Body) ->
        <<Path/binary, "?" , OptionalParams/binary>>, Headers, Body).
 
 do(Method, Url, Path, Headers, Body) ->
-    {ok, Status, _RespHeaders, Client}
-        = hackney:request(Method, <<Url/binary, Path/binary>>,
-                          Headers,
-                          Body, []),
-    lager:info("at=do method=~p path=~s status=~p", [Method, Path, Status]),
-    {ok, Result, _Client1} = hackney:body(Client),
-    jsx:decode(Result).
+    case hackney:request(Method, <<Url/binary, Path/binary>>,
+                         Headers,
+                         Body, []) of
+        {ok, 204, _RespHeaders, Client} ->
+            lager:info("at=do method=~p path=~s status=~p", [Method, Path, 204]),
+            ok;
+        {ok, Status, _RespHeaders, Client} ->
+            lager:info("at=do method=~p path=~s status=~p", [Method, Path, Status]),
+            {ok, Result, _Client1} = hackney:body(Client),
+            jsx:decode(Result)
+    end.
 
 build_qs(Options, OptionalParams) ->
     list_to_binary(string:join(lists:foldl(fun({Name, Value}, QS) ->
@@ -32,6 +36,9 @@ build_qs(Options, OptionalParams) ->
                                                         [{type, string}] ->
                                                             io_lib:format("~p=~s", [Name, Value]);
                                                         [{type, integer}] ->
-                                                            io_lib:format("~p=~i", [Name, Value])
+                                                            io_lib:format("~p=~i", [Name, Value]);
+                                                        [{type, boolean}] ->
+                                                            io_lib:format("~p=~p", [Name, Value])
+
                                                     end | QS]
                                            end, [], Options), "&")).

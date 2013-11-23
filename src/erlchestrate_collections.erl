@@ -5,7 +5,7 @@
 delete_(Required, Optional, Body) ->
     erlchestrate_utils:request(delete,
                                <<"/{collection}">>,
-                               Required, Optional, [{force, [{type, string}]}],
+                               Required, Optional, [{force, [{type, boolean}]}],
                                [{<<"Authorization">>, erlchestrate_app:token()},
                                 {<<"Content-Type">>,
                                  <<"application/json; charset=utf-8">>}],

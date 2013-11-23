@@ -30,7 +30,7 @@ init_per_group(database_access, Config) ->
 
 end_per_group(database_access, Config) ->
     Collection = ?config(collection_name, Config),
-    erlchestrate_collections:delete(Collection),
+    erlchestrate_collections:delete(Collection, [{force, true}]),
     ok.
 
 init_per_testcase(_, Config) ->
