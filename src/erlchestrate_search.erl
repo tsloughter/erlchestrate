@@ -1,16 +1,16 @@
 -module(erlchestrate_search).
 
--export([get/1, get/2]).
+-export([get/1
+        ,get/2]).
 
 get_(Required, Optional, Body) ->
-    {ok, Token} = application:get_env(ramler, token),
     ramler_utils:request(get,
                          <<"/{collection}">>,
                          Required, Optional,
                          [{offset, [{type, integer}]},
                           {limit, [{type, integer}]},
-                          {query, [{type, string}]}],
-			 [{<<"Authorization">>, Token},
+                          {'query', [{type, string}]}],
+			 [{<<"Authorization">>, erlchestrate_app:token()},
 			  {<<"Content-Type">>,
 			   <<"application/json; charset=utf-8">>}],
 			 Body).

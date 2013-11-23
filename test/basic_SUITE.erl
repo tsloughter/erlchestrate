@@ -24,7 +24,7 @@ groups() ->
 init_per_group(database_access, Config) ->
     application:ensure_all_started(erlchestrate),
     Token = os:getenv("TOKEN"),
-    erlchestrate_app:set_token(Token),
+    erlchestrate_app:token(Token),
     Collection = create_random_name("ct_test_collection_"),
     [{collection_name, Collection} | Config].
 

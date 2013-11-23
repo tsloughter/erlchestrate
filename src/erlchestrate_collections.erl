@@ -3,11 +3,10 @@
 -export([delete/1, delete/2]).
 
 delete_(Required, Optional, Body) ->
-    {ok, Token} = application:get_env(erlchestrate, token),
     erlchestrate_utils:request(delete,
                                <<"/{collection}">>,
                                Required, Optional, [{force, [{type, string}]}],
-                               [{<<"Authorization">>, Token},
+                               [{<<"Authorization">>, erlchestrate_app:token()},
                                 {<<"Content-Type">>,
                                  <<"application/json; charset=utf-8">>}],
                                Body).
