@@ -19,8 +19,17 @@ do(Method, Url, Path, Headers, Body) ->
     case hackney:request(Method, <<Url/binary, Path/binary>>,
                          Headers,
                          Body, []) of
-        {ok, 204, _RespHeaders, Client} ->
+        {ok, 204, _RespHeaders, _Client} ->
             lager:info("at=do method=~p path=~s status=~p", [Method, Path, 204]),
+            ok;
+        {ok, Status, _RespHeaders, Client} when Status >= 400->
+            {ok, Result, _Client1} = hackney:body(Client),
+            Error = jsx:decode(Result),
+            lager:error("at=do method=~p path=~s status=~p code=~s error=\"~s\"",
+                       [Method, Path, Status,
+                       proplists:get_value(<<"code">>, Error),
+                       proplists:get_value(<<"info">>,
+                                          proplists:get_value(<<"details">>, Error))]),
             ok;
         {ok, Status, _RespHeaders, Client} ->
             lager:info("at=do method=~p path=~s status=~p", [Method, Path, Status]),
