@@ -25,12 +25,14 @@ do(Method, Url, Path, Headers, Body) ->
         {ok, Status, _RespHeaders, Client} when Status >= 400->
             {ok, Result, _Client1} = hackney:body(Client),
             Error = jsx:decode(Result),
+            Code = proplists:get_value(<<"code">>, Error),
+            Reason = proplists:get_value(<<"info">>,
+                                         proplists:get_value(<<"details">>, Error)),
             lager:error("at=do method=~p path=~s status=~p code=~s error=\"~s\"",
                        [Method, Path, Status,
-                       proplists:get_value(<<"code">>, Error),
-                       proplists:get_value(<<"info">>,
-                                          proplists:get_value(<<"details">>, Error))]),
-            ok;
+                       Code,
+                       Reason]),
+            {error, Code, Reason};
         {ok, Status, _RespHeaders, Client} ->
             lager:info("at=do method=~p path=~s status=~p", [Method, Path, Status]),
             {ok, Result, _Client1} = hackney:body(Client),
