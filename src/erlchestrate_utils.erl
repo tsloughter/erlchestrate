@@ -7,7 +7,10 @@ request(HttpMethod, Endpoint, Required, Optional, QueryParams, Headers) ->
     request(HttpMethod, Endpoint, Required, Optional, QueryParams, Headers, []).
 request(HttpMethod, Endpoint, Required, Optional, QueryParams, Headers, Body) ->
     BaseUri = <<"https://api.orchestrate.io/v0">>,
-    Path = lists:foldl(fun({K, V}, Acc) ->
+    Path = lists:foldl(fun({<<"[", _/binary>>=K, V}, Acc) ->
+                               V2 = filename:join(V),
+                               binary:replace(Acc, <<"{", K/binary, "}">>, V2);
+                          ({K, V}, Acc) ->
                                binary:replace(Acc, <<"{", K/binary, "}">>, V)
                        end, Endpoint, Required),
     OptionalParams = build_qs(Optional, QueryParams),
@@ -24,6 +27,7 @@ do(Method, Url, Path, Headers, Body) ->
             ok;
         {ok, Status, _RespHeaders, Client} when Status >= 400->
             {ok, Result, _Client1} = hackney:body(Client),
+            lager:info("at=do method=~p path=~s status=~p result=~p", [Method, Path, Status, Result]),
             Error = jsx:decode(Result),
             Code = proplists:get_value(<<"code">>, Error),
             Reason = proplists:get_value(<<"info">>,

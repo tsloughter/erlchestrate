@@ -28,7 +28,7 @@ put(Collection, Key, Kind, ToCollection, ToKey, Optional) ->
 
 get_(Required, Optional, Body) ->
     erlchestrate_utils:request(get,
-                               <<"/{collection}/{key}/relations/{kind}">>,
+                               <<"/{collection}/{key}/relations/{[kind]}">>,
                                Required,
                                Optional, [],
                                [{<<"Authorization">>, erlchestrate_app:token()},
@@ -36,12 +36,14 @@ get_(Required, Optional, Body) ->
                                  <<"application/json; charset=utf-8">>}],
                                Body).
 
-get(Collection, Key, Kind) ->
-    get_([{<<"collection">>, Collection}, {<<"key">>, Key},
-          {<<"kind">>, Kind}],
-         [], []).
+get(Collection, Key, Kind) when is_binary(Kind) ->
+    get(Collection, Key, [Kind], []);
+get(Collection, Key, Kinds) when is_list(Kinds) ->
+    get(Collection, Key, Kinds, []).
 
-get(Collection, Key, Kind, Optional) ->
+get(Collection, Key, Kind, Optional) when is_binary(Kind) ->
+    get(Collection, Key, [Kind], Optional);
+get(Collection, Key, Kinds, Optional) when is_list(Kinds) ->
     get_([{<<"collection">>, Collection}, {<<"key">>, Key},
-          {<<"kind">>, Kind}],
+          {<<"[kind]">>, Kinds}],
          Optional, []).
